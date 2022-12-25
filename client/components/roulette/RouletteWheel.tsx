@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ReactComponent as Wheel } from "./roulette.svg";
+import * as API from '../../../server';
 
 type Props = {
   className?: string;
@@ -16,20 +17,19 @@ const RouletteWheel = ({
 }: Props) => {
   const [totalRotation, setTotalRotation] = useState(0);
 
-  const calculateRandomSpinValue = () => {
-    const baseRotation = 5000;
-    const randomRotation = Math.random() * 360;
-    return baseRotation + randomRotation;
-  };
-
   const reduceFullSpins = (input: number) => {
     return input % 360;
   };
 
-  useEffect(() => {
+  const getSpinValue = async () => {
+    const spinValue = await API.getSpinValue();
     if (isWheelSpinning) {
-      setTotalRotation((prevVal) => prevVal + calculateRandomSpinValue());
+      setTotalRotation((prevVal) => prevVal + spinValue);
     }
+  };
+
+  useEffect(() => {
+    getSpinValue();
   }, [isWheelSpinning]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const RouletteWheel = ({
           isWheelSpinning
             ? {
                 transform: `rotate(${totalRotation}deg)`,
-                transition: "7s all cubic-bezier(0.165, 0.840, 0.440, 1.000)",
+                transition: "3s all cubic-bezier(0.165, 0.840, 0.440, 1.000)",
               }
             : { transform: `rotate(${totalRotation}deg)` }
         }

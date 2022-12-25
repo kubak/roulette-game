@@ -23,7 +23,7 @@ const winConditions = [
 ];
 
 const outcomeToPositionOnTheWheel = (entry: number) => {
-  const positionsOnTheWheel = 24;
+  const positionsOnTheWheel = 24;  // 360 / number of numbers
   return Math.ceil(entry / positionsOnTheWheel);
 };
 
